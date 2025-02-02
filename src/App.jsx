@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Upload, X, Download } from 'lucide-react';
+import BuyMeACoffeeButton from './BuyMeACoffeeButton';
 
 const App = () => {
   const [uploadedImage, setUploadedImage] = useState(null);
@@ -25,31 +26,31 @@ const App = () => {
   const splitImage = (img) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    
+
     // Set canvas size to match image
     canvas.width = img.width;
     canvas.height = img.height;
-    
+
     // Draw the original image
     ctx.drawImage(img, 0, 0);
-    
+
     const sections = [];
     const leftWidth = Math.floor(img.width / 2);
     const rightWidth = img.width - leftWidth;
-    
+
     // Left sections (1:1 ratio)
     const leftHeight = Math.floor(img.height / 2);
-    
+
     // Right sections (3:2 ratio)
     const rightSectionHeight = Math.floor(img.height / 3);
-    
+
     // Create sections
     sections.push(ctx.getImageData(0, 0, leftWidth, leftHeight)); // Section 1
     sections.push(ctx.getImageData(0, leftHeight, leftWidth, leftHeight)); // Section 2
     sections.push(ctx.getImageData(leftWidth, 0, rightWidth, rightSectionHeight)); // Section 3
     sections.push(ctx.getImageData(leftWidth, rightSectionHeight, rightWidth, rightSectionHeight)); // Section 4
     sections.push(ctx.getImageData(leftWidth, rightSectionHeight * 2, rightWidth, rightSectionHeight)); // Section 5
-    
+
     setSplittedSections(sections);
   };
 
@@ -59,7 +60,7 @@ const App = () => {
     canvas.height = imageData.height;
     const ctx = canvas.getContext('2d');
     ctx.putImageData(imageData, 0, 0);
-    
+
     const link = document.createElement('a');
     link.download = `section_${index + 1}.png`;
     link.href = canvas.toDataURL();
@@ -72,6 +73,7 @@ const App = () => {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">Image Splitter</h1>
           <p className="text-gray-600">Split your image into 5 sections with specific aspect ratios</p>
+
         </div>
 
         {/* Upload Section */}
@@ -105,7 +107,7 @@ const App = () => {
                 alt="Original"
                 className="w-full h-auto"
               />
-              <button 
+              <button
                 onClick={() => setUploadedImage(null)}
                 className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
               >
@@ -149,6 +151,10 @@ const App = () => {
 
         {/* Hidden canvas for processing */}
         <canvas ref={canvasRef} className="hidden" />
+
+      </div>
+      <div className="flex justify-center items-center mt-4">
+        <BuyMeACoffeeButton />
       </div>
     </div>
   );
